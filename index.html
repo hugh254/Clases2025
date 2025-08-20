@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario de JavaScript</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .description {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        
+        .progress-container {
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            height: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .question h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .option {
+            padding: 12px 15px;
+            margin: 8px 0;
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+        }
+        
+        .option.selected {
+            background-color: #d6eaf8;
+            border-color: #3498db;
+        }
+        
+        .option.correct {
+            background-color: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .option.incorrect {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        #prev-btn {
+            background-color: #7f8c8d;
+        }
+        
+        #prev-btn:hover {
+            background-color: #95a5a6;
+        }
+        
+        #submit-btn {
+            background-color: #2ecc71;
+        }
+        
+        #submit-btn:hover {
+            background-color: #27ae60;
+        }
+        
+        .result {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .result h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .score {
+            font-size: 3rem;
+            color: #2ecc71;
+            margin: 20px 0;
+        }
+        
+        .explanation {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: left;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Cuestionario de JavaScript</h1>
+            <p class="description">Pon a prueba tus conocimientos sobre conceptos fundamentales de JavaScript. Responde las 10 preguntas y descubre tu puntuación.</p>
+        </header>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        
+        <div id="quiz-container">
+            <div class="question" id="question-1">
+                <h3>1. ¿Qué es JavaScript?</h3>
+                <div class="options">
+                    <div class="option" onclick="selectOption(1, 0)">a) Un lenguaje de programación para el desarrollo backend</div>
+                    <div class="option" onclick="selectOption(1, 1)">b) Un lenguaje de scripting para páginas web</div>
+                    <div class="option" onclick="selectOption(1, 2)">c) Un framework para desarrollo frontend</div>
+                    <div class="option" onclick="selectOption(1, 3)">d) Un lenguaje de base de datos</div>
+                </div>
+            </div>
+            
+            <div class="question hidden" id="question-2">
+                <h3>2. ¿Qué significa DOM?</h3>
+                <div class="options">
+                    <div class="option" onclick="selectOption(2, 0)">a) Document Object Model</div>
+                    <div class="option" onclick="selectOption(2, 1)">b) Data Object Management</div>
+                    <div class="option" onclick="selectOption(2, 2)">c) Digital Orientation Module</div>
+                    <div class="option" onclick="selectOption(2, 3)">d) Document Order Model</div>
+                </div>
+            </div>
+            
+            <div class="question hidden" id="question-3">
+                <h3>3. ¿Qué es una closure en JavaScript?</h3>
+                <div class="options">
+                    <div class="option" onclick="selectOption(3, 0)">a) Una función que tiene acceso al ámbito de su función exterior</div>
+                    <div class="option" onclick="selectOption(3, 1)">b) Una forma de ocultar variables</div>
+                    <div class="option" onclick="selectOption(3, 2)">c) Un método para cerrar ventanas del navegador</div>
+                    <div class="option" onclick="selectOption(3, 3)">d) Una función que se ejecuta automáticamente</div>
+                </div>
+            </div>
+            
+            <div class="question hidden" id="question-4">
+                <h3>4. ¿Qué método se utiliza para convertir un objeto a formato JSON?</h3>
+                <div class="options">
+                    <div class="option" onclick="selectOption(4, 0)">a) JSON.parse()</div>
+                    <div class="option" onclick="selectOption(4, 1)">b) JSON.stringify()</div>
+                    <div class="option" onclick="selectOption(4, 2)">c) Object.toJSON()</div>
+                    <div class="option" onclick="selectOption(4, 3)">d) JSON.encode()</div>
+                </div>
+            </div>
+            
+            <div class="question hidden" id="question-5">
+                <h3>5. ¿Qué es el hoisting en JavaScript?</h3>
+                <div class="options">
+                    <div class="option" onclick="selectOption(5, 0)">a) El comportamiento de mover declaraciones al top del ámbito</div>
+                    <div class="option" onclick="selectOption(5, 1)">b) Una forma de optimizar el código</div>
+                    <div class="option" onclick="selectOption(5, 2)">c) Un método para elevar elementos en el DOM</div>
+                    <div class="option" onclick="selectOption(5, 3)">d) Una técnica para manejar eventos</div>
+                </div>
+            </div>
+            
+            <div class="question hidden" id="question-6">
+                <h3>6. ¿Cuál es la diferencia entre "==" y "==="?</h3>
+                <div class="options">
+                    <div class="option" onclick="selectOption(6, 0)">a) "==" compara valor y tipo, "===" solo valor</div>
+                    <div class="option" onclick="selectOption(6, 1)">b) "===" compara valor y tipo, "==" solo valor</div>
+                    <div class="option" onclick="selectOption(6, 2)">c) No hay diferencia</div>
+                    <div class="option" onclick="selectOption(6, 3)">d) "==" es para números, "===" para strings</div>
+                </div>
+            </div>
+            
+            <div class="question hidden" id="question-7">
+                <h3>7. ¿Qué es una promesa en JavaScript?</h3>
+                <div class="options">
+                    <div class="option" onclick="selectOption(7, 0)">a) Un objeto que representa la finalización o el fracaso de una operación asíncrona</div>
+                    <div class="option" onclick="selectOption(7, 1)">b) Una función que se ejecuta después de un tiempo determinado</div>
+                    <div class="option" onclick="selectOption(7, 2)">c) Una declaración de intenciones en el código</div>
+                    <div class="option" onclick="selectOption(7, 3)">d) Un método para garantizar que una función se complete</div>
+                </div>
+            </div>
+            
+            <div class="question hidden" id="question-8">
+                <h3>8. ¿Qué hace el método "addEventListener"?</h3>
+                <div class="options">
+                    <div class="option" onclick="selectOption(8, 0)">a) Permite escuchar eventos en elementos del DOM</div>
+                    <div class="option" onclick="selectOption(8, 1)">b) Agrega una función a la cola de ejecución</div>
+                    <div class="option" onclick="selectOption(8, 2)">c) Crea un nuevo evento personalizado</div>
+                    <div class="option" onclick="selectOption(8, 3)">d) Registra un observador para cambios en el DOM</div>
+                </div>
+            </div>
+            
+            <div class="question hidden" id="question-9">
+                <h3>9. ¿Qué es el contexto de ejecución (execution context) en JavaScript?</h3>
+                <div class="options">
+                    <div class="option" onclick="selectOption(9, 0)">a) El entorno en el que se ejecuta el código JavaScript</div>
+                    <div class="option" onclick="selectOption(9, 1)">b) El ámbito de una función</div>
+                    <div class="option" onclick="selectOption(9, 2)">c) El objeto window del navegador</div>
+                    <div class="option" onclick="selectOption(9, 3)">d) El estado actual de la pila de llamadas</div>
+                </div>
+            </div>
+            
+            <div class="question hidden" id="question-10">
+                <h3>10. ¿Qué son las arrow functions?</h3>
+                <div class="options">
+                    <div class="option" onclick="selectOption(10, 0)">a) Una sintaxis más corta para escribir funciones</div>
+                    <div class="option" onclick="selectOption(10, 1)">b) Funciones que no tienen su propio "this"</div>
+                    <div class="option" onclick="selectOption(10, 2)">c) Funciones que no pueden ser utilizadas como constructores</div>
+                    <div class="option" onclick="selectOption(10, 3)">d) Todas las anteriores</div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button id="prev-btn" onclick="prevQuestion()" disabled>Anterior</button>
+                <button id="next-btn" onclick="nextQuestion()">Siguiente</button>
+                <button id="submit-btn" class="hidden" onclick="submitQuiz()">Enviar respuestas</button>
+            </div>
+        </div>
+        
+        <div id="result-container" class="result hidden">
+            <h2>Resultados del Cuestionario</h2>
+            <p>Tu puntuación:</p>
+            <div class="score" id="score">0/10</div>
+            <div id="answers-feedback"></div>
+            <button onclick="resetQuiz()" style="margin-top: 20px;">Intentar de nuevo</button>
+        </div>
+    </div>
+
+    <script>
+        // Respuestas correctas
+        const correctAnswers = [
+            1, // Pregunta 1: b
+            0, // Pregunta 2: a
+            0, // Pregunta 3: a
+            1, // Pregunta 4: b
+            0, // Pregunta 5: a
+            1, // Pregunta 6: b
+            0, // Pregunta 7: a
+            0, // Pregunta 8: a
+            0, // Pregunta 9: a
+            3  // Pregunta 10: d
+        ];
+        
+        // Explicaciones de las respuestas
+        const explanations = [
+            "JavaScript es un lenguaje de scripting interpretado que se ejecuta en el navegador, principalmente para hacer páginas web interactivas.",
+            "DOM significa Document Object Model, que es una representación en forma de árbol de los elementos de un documento HTML.",
+            "Una closure es una función que tiene acceso a variables de su ámbito exterior, incluso después de que la función exterior haya terminado de ejecutarse.",
+            "JSON.stringify() convierte un objeto JavaScript en una cadena JSON, mientras que JSON.parse() convierte una cadena JSON en un objeto JavaScript.",
+            "El hoisting es un comportamiento de JavaScript donde las declaraciones de variables y funciones se mueven al top de su ámbito antes de la ejecución del código.",
+            "El operador '==' compara solo los valores, realizando conversión de tipo si es necesario, mientras que '===' compara tanto el valor como el tipo de dato.",
+            "Una promesa es un objeto que representa un valor que puede estar disponible ahora, en el futuro, o nunca, permitiendo manejar operaciones asíncronas.",
+            "addEventListener() permite registrar un manejador de eventos para un elemento específico y un tipo de evento, sin sobrescribir manejadores existentes.",
+            "El contexto de ejecución es el entorno en el que el código JavaScript se ejecuta, incluyendo variables, objetos y funciones disponibles en ese momento.",
+            "Las arrow functions son una sintaxis más concisa para escribir funciones, no tienen su propio 'this' y no pueden ser utilizadas como constructores."
+        ];
+        
+        let currentQuestion = 1;
+        const totalQuestions = 10;
+        const userAnswers = new Array(totalQuestions).fill(null);
+        
+        // Actualizar barra de progreso
+        function updateProgressBar() {
+            const progress = ((currentQuestion - 1) / totalQuestions) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+        }
+        
+        // Navegar a la siguiente pregunta
+        function nextQuestion() {
+            document.getElementById(`question-${currentQuestion}`).classList.add('hidden');
+            currentQuestion++;
+            
+            if (currentQuestion <= totalQuestions) {
+                document.getElementById(`question-${currentQuestion}`).classList.remove('hidden');
+                document.getElementById('prev-btn').disabled = false;
+                
+                if (currentQuestion === totalQuestions) {
+                    document.getElementById('next-btn').classList.add('hidden');
+                    document.getElementById('submit-btn').classList.remove('hidden');
+                }
+            }
+            
+            updateProgressBar();
+        }
+        
+        // Navegar a la pregunta anterior
+        function prevQuestion() {
+            document.getElementById(`question-${currentQuestion}`).classList.add('hidden');
+            currentQuestion--;
+            
+            if (currentQuestion >= 1) {
+                document.getElementById(`question-${currentQuestion}`).classList.remove('hidden');
+                document.getElementById('next-btn').classList.remove('hidden');
+                document.getElementById('submit-btn').classList.add('hidden');
+                
+                if (currentQuestion === 1) {
+                    document.getElementById('prev-btn').disabled = true;
+                }
+            }
+            
+            updateProgressBar();
+        }
+        
+        // Seleccionar una opción
+        function selectOption(questionIndex, optionIndex) {
+            // Remover selección previa
+            const options = document.querySelectorAll(`#question-${questionIndex} .option`);
+            options.forEach(option => option.classList.remove('selected'));
+            
+            // Marcar nueva selección
+            options[optionIndex].classList.add('selected');
+            
+            // Guardar respuesta
+            userAnswers[questionIndex - 1] = optionIndex;
+        }
+        
+        // Enviar el cuestionario
+        function submitQuiz() {
+            let score = 0;
+            let feedbackHTML = "";
+            
+            // Calcular puntuación y generar feedback
+            for (let i = 0; i < totalQuestions; i++) {
+                const isCorrect = userAnswers[i] === correctAnswers[i];
+                if (isCorrect) score++;
+                
+                feedbackHTML += `
+                    <div class="question">
+                        <h3>Pregunta ${i + 1}</h3>
+                        <p>Tu respuesta: ${userAnswers[i] !== null ? String.fromCharCode(97 + userAnswers[i]) : 'No respondida'}</p>
+                        <p>Respuesta correcta: ${String.fromCharCode(97 + correctAnswers[i])}</p>
+                        <div class="explanation">
+                            <strong>Explicación:</strong> ${explanations[i]}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Mostrar resultados
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('result-container').classList.remove('hidden');
+            document.getElementById('score').textContent = `${score}/${totalQuestions}`;
+            document.getElementById('answers-feedback').innerHTML = feedbackHTML;
+        }
+        
+        // Reiniciar el cuestionario
+        function resetQuiz() {
+            currentQuestion = 1;
+            userAnswers.fill(null);
+            
+            // Ocultar todas las preguntas excepto la primera
+            for (let i = 1; i <= totalQuestions; i++) {
+                document.getElementById(`question-${i}`).classList.add('hidden');
+            }
+            document.getElementById('question-1').classList.remove('hidden');
+            
+            // Reiniciar botones
+            document.getElementById('prev-btn').disabled = true;
+            document.getElementById('next-btn').classList.remove('hidden');
+            document.getElementById('submit-btn').classList.add('hidden');
+            
+            // Reiniciar selecciones
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => {
+                option.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Ocultar resultados y mostrar cuestionario
+            document.getElementById('result-container').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            
+            // Reiniciar barra de progreso
+            updateProgressBar();
+        }
+        
+        // Inicializar barra de progreso
+        updateProgressBar();
+    </script>
+</body>
+</html>
